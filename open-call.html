@@ -1,0 +1,186 @@
+<script src="/three.js-master/build/three-r117.min.js"></script>
+<script src="/three.js-master/examples/js/Detector.js"></script>
+<script src="/three.js-master/examples/js/loaders/GLTFLoader.js"></script>
+<script src="/three.js-master/examples/js/loaders/DRACOLoader.js"></script>
+<script src="/three.js-master/examples/js/controls/OrbitControls.js"></script>
+
+<script src="/three.js-master/examples/js/libs/stats.min.js"></script>
+<div
+    id="stats-container"
+    class="boxflex"
+    style="position: fixed; width: 144px; height: 96px; top: 2rem; right: 2rem; z-index: 100; opacity: 0.75; background: #002; border-radius: 1rem;"
+>
+</div>
+
+<!-- <script src="/js/lib/threejs/THREEx.FullScreen.js"></script> -->
+<!-- <script src="/js/lib/threejs/THREEx.KeyboardState.js"></script> -->
+<script src="/three.js-master/examples/js/THREEx.WindowResize.js"></script>
+<script src="/three.js-master/examples/js/WebGL.js"></script>
+
+<script>
+    var objects = []
+
+    // standard global variables
+    var container, scene, threeCamera, renderer, controls
+    var stats
+    // var keyboard = new THREEx.KeyboardState()
+    var clock = new THREE.Clock()
+
+    // custom global variables
+    var egg
+
+    init()
+    animate()
+
+    function init() {
+        // scene
+
+        threeCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 8000)
+        threeCamera.position.z = 500
+
+        scene = new THREE.Scene()
+        // scene.background = new THREE.Color(0xffffff)
+        scene.background = null // transparent bg
+
+        // lights
+
+        var generalLight = new THREE.AmbientLight(0xffffff, 0.5)
+        scene.add(generalLight)
+
+        var topLight = new THREE.DirectionalLight(0xffffff, 0.5)
+        scene.add(topLight)
+
+        var frontLight = new THREE.DirectionalLight(0xffffff, 0.5)
+        frontLight.position.set(-0.001, -0.001, 0.01).normalize()
+        scene.add(frontLight)
+
+        var backtLight = new THREE.DirectionalLight(0xffffff, 0.5)
+        backtLight.position.set(-0.001, -0.001, -0.01).normalize()
+        scene.add(backtLight)
+
+        // model
+
+        // var manager = new THREE.LoadingManager()
+        // manager.onProgress = function (item, loaded, total) {
+        //     console.log(item, loaded, total)
+        // }
+        //
+        // var onProgress = function (xhr) {
+        //     if (xhr.lengthComputable) {
+        //         var percentComplete = (xhr.loaded / xhr.total) * 100
+        //         if (percentComplete < 100) {
+        //             var downloaded = "Loading: " + Math.round(percentComplete, 2) + "%"
+        //         } else {
+        //             var downloaded = " "
+        //         }
+        //         document.getElementById("Loader").innerHTML = downloaded
+        //     }
+        // }
+
+        var onError = function(xhr) {}
+
+        // var texture = new THREE.Texture()
+        // var lineTexLoader = new THREE.ImageLoader() // use .ImageLoader(manager) if you want to pass loading progress to THREE.LoadingManager()
+        // lineTexLoader.load("../assets/threejs/texture.png", function (image) {
+        //     texture.image = image
+        //     texture.needsUpdate = true
+        // })
+
+        var gloader = new THREE.GLTFLoader()
+        var dracoLoader = new THREE.DRACOLoader()
+        dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/")
+        gloader.setDRACOLoader(dracoLoader)
+
+        var gAsset = "/assets/open-call.gltf"
+        gloader.load(
+            gAsset,
+            function(gltf) {
+                gltf.scene.traverse(function(child) {
+                    // if (child.isMesh) {
+                    //     child.material.map = texture
+                    //     child.material.side = THREE.DoubleSide
+                    // }
+                    // ^ comment this out for.... grey ?? kinda beautiful??
+                })
+
+                console.log(`Loaded "${gAsset}" 💯`)
+
+                gltf.scene.position.y = 20
+                gltf.scene.position.x = -20
+                gltf.scene.scale.x = 80
+                gltf.scene.scale.y = 80
+                gltf.scene.scale.z = 80
+                scene.add(gltf.scene)
+
+                if (window.innerWidth <= 1000) {
+                    gltf.scene.rotation.z = 1.6
+                    threeCamera.position.z = 750
+                    threeCamera.position.x = -20
+                }
+            },
+            function(xhr) {
+                console.log(`Loading ${(xhr.loaded / xhr.total) * 100} 🥺`)
+            },
+            function(error) {
+                console.log(`Error 😭`)
+                console.log(error)
+            }
+        )
+
+        // divide original image scale by 30 for sprite.scale.set
+
+        // render
+
+        renderer = new THREE.WebGLRenderer({ alpha: true })
+        if (!Detector.webgl) console.log(`😔 no webgl`)
+
+        // shadows
+        // renderer.shadowMap.enabled = true
+        // renderer.shadowMap.type = THREE.PCFSoftShadowMap
+
+        renderer.setClearColor(0x000000, 0)
+
+        renderer.setPixelRatio(2)
+        renderer.setSize(innerWidth, innerHeight)
+
+        container = document.getElementById("ThreeJS")
+        container.appendChild(renderer.domElement)
+        window.addEventListener("resize", onWindowResize, false)
+
+        // events
+
+        THREEx.WindowResize(renderer, threeCamera)
+        // THREEx.FullScreen.bindKey({ charCode: "m".charCodeAt(0) })
+
+        // controls
+
+        controls = new THREE.OrbitControls(threeCamera, renderer.domElement)
+        controls.enableZoom = false
+    }
+
+    function onWindowResize() {
+        threeCamera.aspect = window.innerWidth / window.innerHeight
+        threeCamera.updateProjectionMatrix()
+    }
+
+    function onDocumentMouseMove(event) {
+        // the following line would stop any other event handler from firing
+        // (such as the mouse's TrackballControls)
+        // event.preventDefault();
+
+        // update the mouse variable
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+        // console.log(`something is happening!`)
+    }
+
+    function animate() {
+        requestAnimationFrame(animate)
+    }
+
+    function render() {
+        // renderer.setPixelRatio(2)
+        // renderer.setSize(innerWidth, innerHeight)
+        renderer.render(scene, threeCamera)
+    }
+</script>
