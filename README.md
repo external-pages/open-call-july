@@ -1,4 +1,4 @@
-![meta-image](http://externalpages.org/open-call-july/assets/gform-header.png)
+![meta-image](http://externalpages.org/open-call-july/assets/gfrom-header.png)
 
 # Open call for ambitious digital project proposals – Wednesday 1st of July
 
