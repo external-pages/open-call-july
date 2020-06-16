@@ -1,3 +1,5 @@
+![meta-image](http://externalpages.org/open-call-july/assets/meta-open-call.png)
+
 # Open call for ambitious digital project proposals – Wednesday 1st of July
 
 External Pages is pleased to announce an open call for proposals of ambitious digital projects, which ends on midnight Wednesday 1st of July. 
