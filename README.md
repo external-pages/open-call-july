@@ -11,6 +11,7 @@ Successful applicants will be provided with both curatorial and technical suppor
 Due to the support of a-n Bursaries, we offer an artist fee of £100.
 
 
+
 ### About External Pages
 
 External Pages is an online exhibition space, presenting digital projects inspired by anti-capitalist and xenofeminist thought. Every other month, we showcase an artist or collective who push the potential of viewing art on our browsers. The exhibitions we host experiment with web development to question the placement of internet art in galleries, cheat curatorial hierarchies and look at how websites can be appropriated as an emancipatory technology.
@@ -18,13 +19,14 @@ External Pages is an online exhibition space, presenting digital projects inspir
 
 More info about External Pages → [externalpages.org/#about-contact](http://externalpages.org/#about-contact)
 
-Current exhibition → [http://externalpages.org/#legacyrussell](http://externalpages.org/#legacyrussell)
+Current exhibition → [externalpages.org/#legacyrussell](http://externalpages.org/#legacyrussell)
 
 Questions → hello@externalpages.org
 
 Website → [externalpages.org](http://externalpages.org)
 
 Twitter & Instagram → external_pages
+
 
 
 ### How to Apply
